@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Processing Task</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        h3 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            margin-right: 10px;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            margin-right: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 8px 15px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        p {
+            text-align: center;
+            padding: 10px;
+            color: #444;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .processing {
+            color: blue;
+        }
+
+        .data-display {
+            margin-top: 20px;
+            text-align: left;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .data-display p {
+            margin: 5px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <script>
+        function showProcessingMessage() {
+            var processingMessage = document.getElementById('processing-message');
+            processingMessage.style.display = 'block';
+        }
+    </script>
+</head>
+<body>
+    <h1>Data Processor</h1>
+    <h3>E-Commerce Api Data  ---  Redis Database ---- Data Processing (To Upper) ---- Data Stored in SQLite  </h3>
+
+
+
+    <!-- Fetch Data Form -->
+    <form action="/fetch_data" method="post" onsubmit="showProcessingMessage()">
+        <label for="num_rows">Number of Rows:</label>
+        <input type="number" id="num_rows" name="num_rows" min="1" value="{{ num_rows if num_rows else 100 }}">
+        <button type="submit">Fetch Data</button>
+    </form>
+
+
+
+
+    
+    <!-- Processing Message -->
+    <p id="processing-message" class="processing" style="display:none;">Your data is being processed, please wait...</p>
+
+    <!-- Message Display -->
+    {% if message %}
+        <p class="{{ 'success' if 'successfully' in message else 'error' }}">{{ message }}</p>
+    {% endif %}
+
+    <!-- Show Buttons if Data is in Redis -->
+    {% if show_button %}
+        <div style="text-align: center; margin-bottom: 20px;">
+            <form action="/send_to_db" method="post" style="display:inline;">
+                <button type="submit">Send Data to Database</button>
+            </form>
+
+            <form action="/view_redis_data" method="post" style="display:inline;">
+                <button type="submit">View Redis Data</button>
+            </form>
+        </div>
+    {% endif %}
+
+    <!-- Display Redis Data -->
+    {% if redis_data %}
+        <div class="data-display">
+            {% for item in redis_data %}
+                {% for key, value in item.items() %}
+                    <p><strong>{{ key }}:</strong> {{ value }}</p>
+                {% endfor %}
+                <hr>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
+    <!-- Show "Fetch Data from Database" Button after sending data to the database -->
+    {% if show_db_button %}
+        <div style="text-align: center; margin-bottom: 20px;">
+            <form action="/get_processed_data" method="post" style="display:inline;">
+                <button type="submit">Fetch Data from Database</button>
+            </form>
+        </div>
+    {% endif %}
+
+
+
+    <!-- Display SQLite Data in a Table -->
+    {% if sqlite_data %}
+        <table>
+            <thead>
+                <tr>
+                    {% for column in sqlite_data[0].keys() %}
+                        <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in sqlite_data %}
+                    <tr>
+                        {% for value in row.values() %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</body>
+</html>
