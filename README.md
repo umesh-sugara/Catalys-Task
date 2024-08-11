@@ -4,13 +4,15 @@
 
 This project fetches e-commerce data from a Google Sheet, stores it temporarily in Redis, preprocesses it, and then stores it in an SQLite database.
 
+![image](https://github.com/user-attachments/assets/e46a9588-a529-444f-8822-c3e85839831b)
+
+
 ## Setup Instructions
 
 1. **Clone the Repository**
 
    ```bash
-   git clone <repository-url>
-   cd <repository-directory>
+   git clone git@github.com:umesh-sugara/Catalys-Task.git
    
 2. **Install Dependencies**
 
@@ -18,7 +20,9 @@ This project fetches e-commerce data from a Google Sheet, stores it temporarily 
    pip install -r requirements.txt
 
 3. **Configure Google Sheets**
-   
+
+    - Access the E-Commerce data at : 
+       - https://docs.google.com/spreadsheets/d/1oBPHPO2crVNvIwS103scL0Fni6-LvMwXNUfyGw4lkNA/edit?gid=1097888433#gid=1097888433.
     - Place keys.json (Google Sheets credentials) in the project directory.
     - Share the Google Sheet with the service account specified in keys.json.
 
@@ -72,12 +76,15 @@ This project fetches e-commerce data from a Google Sheet, stores it temporarily 
 8. **Access the Application**
    
     - Access the application at http://127.0.0.1:5000/.
-   
-7. **Run the Application**
 
-   ```bash
-   python app.py
+## Usage
 
-2. **Install Dependencies**
+   - Fetch Data: Enter the number of rows to fetch from Google Sheets API and click "Fetch Data". Data will be stored in Redis. The default count of rows is 100.
+   - View Redis Data: Click "View Redis Data" to display data from Redis. This will be shown in key-value format.
+   - Send Data to Database: Click "Send Data to Database" to process (Converting all the values in UPPER Case) and store the data in SQLite. Once data is successfully stored in database, Redis will be cleared.
+   - Fetch Data from Database: Click "Fetch Data from Database" to view data from SQLite.
+
+## Feedback
+   - For further enquires reach out to umeshsugara9@gmail.com || https://in.linkedin.com/in/umesh-sugara
 
 
